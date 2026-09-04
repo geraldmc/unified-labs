@@ -1,10 +1,10 @@
-# AI Arcade — Sprint Review Video Script (~4:25)
+# AI Arcade — Sprint Review Video Script (~4:10)
 
 **[0:00–0:15] Open**
 
 I'm the lead AI engineer on RetroMind Studios' new project — bringing classic board games back to life with built-in AI. Today it's Mastermind and Peg Solitaire, both solved with classical AI.
 
-## [0:15–1:25] Part 1 — The Detective Alibi (Mastermind)
+## [0:15–1:20] Part 1 — The Detective Alibi (Mastermind)
 
 **Mastermind** is a classic code-breaking game where players guess a hidden 4-color sequence and receive Black/White peg feedback to refine their guesses. We chose this game because it is a well-defined logical puzzle, showcasing where classical AI exceeds simple guessing. Our AI demonstration shows a live attempt to uncover the secret code. 
 *[Show: heatmap animation]*
@@ -13,12 +13,12 @@ Each circle represents a possible color in a specific slot, with brightness indi
 After each guess, the AI checks all 1,296 possible codes against a question: if this were the correct answer, would it produce the same feedback? If not, that candidate is impossible and is eliminated. The potential pool shrinks with each turn because we systematically eliminate options rather than just guessing. This method ensures the process terminates.
 
 
-## [1:25–2:05] Part 2 — Rule-Based AI vs. LLMs
+## [1:20–1:55] Part 2 — Rule-Based AI vs. LLMs
 
 Why solve this with rule-based logic instead of an LLM? Because Mastermind is fully constrained — every rule is precise, every outcome deterministic. An LLM functions as a statistical pattern-matcher. If you request it to monitor 1,296 hypotheses over six turns, it may hallucinate — misremembering eliminated codes or confidently suggesting guesses that contradict earlier feedback — because it predicts probable text rather than following a strict algorithm. For games with strict, precise rules, rigid logic is more effective.
 
 
-## [2:05–4:10] Part 3 — The Custom Heuristic (A*)
+## [1:55–3:55] Part 3 — The Custom Heuristic (A*)
 
 *[Show: both bar charts]*
 
@@ -30,6 +30,6 @@ The A* algorithm utilizes an informed score, $f(n)=g(n)+h(n)$, combining actual 
 
 A key caveat: an *admissible* heuristic never overestimates the actual remaining cost, ensuring the optimal solution. My heuristic isn't admissible — it intentionally overestimates. Typically, this is risky. However, in this case, every winning solution must be exactly 13 jumps, no matter the path, so there's no risk of missing a shorter solution. This allows me to sacrifice that guarantee without penalty and instead focus on improving speed.
 
-## [4:10–4:25] Close
+## [3:55–4:10] Close
 
-Constraint Satisfaction for pure logical deduction, Informed Search for pure combinatorial search — two classical AI tools, each matched to the shape of its problem. Thanks."
+Constraint Satisfaction for pure logical deduction, Informed Search for pure combinatorial search — two classical AI tools, each matched to the shape of its problem. Thanks.
