@@ -1,4 +1,4 @@
-# AI Arcade — Sprint Review Video Script (~4:10)
+# AI Arcade — Sprint Review Video Script (~4:20)
 
 **[0:00–0:15] Open**
 
@@ -6,9 +6,11 @@ I'm the lead AI engineer on RetroMind Studios' new project — bringing classic 
 
 ## [0:15–1:20] Part 1 — The Detective Alibi (Mastermind)
 
-**Mastermind** is a classic code-breaking game where players guess a hidden 4-color sequence and receive Black/White peg feedback to refine their guesses. We chose this game because it is a well-defined logical puzzle, showcasing where classical AI exceeds simple guessing. Our AI demonstration shows a live attempt to uncover the secret code. 
+**Mastermind** is a classic code-breaking game where players guess a hidden 4-color sequence and receive Black/White peg feedback to refine their guesses. We chose this game because it's a perfectly constrained logical puzzle. Our AI demonstration shows a live attempt to uncover the secret code. 
+
 *[Show: heatmap animation]*
-Each circle represents a possible color in a specific slot, with brightness indicating how many hypotheses support that choice. As options are ruled out, they darken.
+
+Each circle represents a possible color in a specific slot, with brightness indicating how many hypotheses support that choice. As options are ruled out, the circle color darkens.
 
 After each guess, the AI checks all 1,296 possible codes against a question: if this were the correct answer, would it produce the same feedback? If not, that candidate is impossible and is eliminated. The potential pool shrinks with each turn because we systematically eliminate options rather than just guessing. This method ensures the process terminates.
 
@@ -18,18 +20,20 @@ After each guess, the AI checks all 1,296 possible codes against a question: if 
 Why solve this with rule-based logic instead of an LLM? Because Mastermind is fully constrained — every rule is precise, every outcome deterministic. An LLM functions as a statistical pattern-matcher. If you request it to monitor 1,296 hypotheses over six turns, it may hallucinate — misremembering eliminated codes or confidently suggesting guesses that contradict earlier feedback — because it predicts probable text rather than following a strict algorithm. For games with strict, precise rules, rigid logic is more effective.
 
 
-## [1:55–3:55] Part 3 — The Custom Heuristic (A*)
-
-*[Show: both bar charts]*
+## [1:55–4:15] Part 3 — The Custom Heuristic (A*)
 
 Mastermind worked because feedback let us reason logically toward the answer. Peg Solitaire is different: pegs jump over each other until only one remains, with no feedback to say which move was 'right' — the only way to know if a sequence works is to seek it out. That makes this a pure search problem, not a deduction problem, and it needs different tools.
 
-Blind BFS discovered a solution with 13 jumps but required exploring 3,012 states, keeping its entire frontier and visited set in memory—totaling over 5,700 states. DFS is less resource-intensive, examining only 490 states, but it relies on a fortunate branch without any certainty.
+*[Show: nodes-expanded chart]*
+Blind BFS found a 13-jump solution but had to explore 3,012 states to get there. DFS is far cheaper, just 490 states, but it's betting on a lucky branch with no guarantee.
 
-The A* algorithm utilizes an informed score, $f(n)=g(n)+h(n)$, combining actual costs and estimated remaining costs, prioritizing the expansion of the most promising state. My heuristic incorporates two additional penalties beyond the standard "pegs remaining" count: one for isolated pegs that cannot jump without neighboring pegs, and another for dispersion, which measures how dispersed the pegs are to encourage consolidation into a single peg. This approach reduces the search space to 57 states, representing a 98% decrease compared to BFS.
+*[Show: memory/frontier chart]*
+Node count isn't the whole memory story — this chart splits frontier from visited set. BFS holds both at once, over 5,700 combined. DFS's frontier is tiny, just 26, but its footprint is still dominated by a 490-state visited set.
 
-A key caveat: an *admissible* heuristic never overestimates the actual remaining cost, ensuring the optimal solution. My heuristic isn't admissible — it intentionally overestimates. Typically, this is risky. However, in this case, every winning solution must be exactly 13 jumps, no matter the path, so there's no risk of missing a shorter solution. This allows me to sacrifice that guarantee without penalty and instead focus on improving speed.
+The A* algorithm scores every candidate as f(n) = g(n) + h(n) — cost so far plus estimated cost remaining — and always expands the most promising state first. My heuristic adds two penalties to the baseline "pegs remaining" count: isolated pegs, which can't jump without a neighbor, and dispersion, how spread out the remaining pegs are, since the goal is one consolidated peg. That drops the search to just 57 states and a footprint of 225 — a 98% reduction versus BFS.
 
-## [3:55–4:10] Close
+A key caveat: an *admissible* heuristic never overestimates the true remaining cost, guaranteeing the optimal solution. Mine isn't admissible — it deliberately overestimates. Normally that's risky, but here every winning solution is exactly 13 jumps regardless of path, so there's no shorter solution to miss. So I trade that guarantee for speed, for free.
+
+## [4:15–4:30] Close
 
 Constraint Satisfaction for pure logical deduction, Informed Search for pure combinatorial search — two classical AI tools, each matched to the shape of its problem. Thanks.
