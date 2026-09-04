@@ -6,25 +6,23 @@ I'm the lead AI engineer on RetroMind Studios' new project — bringing classic 
 
 ## [0:15–1:25] Part 1 — The Detective Alibi (Mastermind)
 
+**Mastermind** is a classic code-breaking game where players guess a hidden 4-color sequence and receive Black/White peg feedback to refine their guesses. We chose this game because it is a well-defined logical puzzle, showcasing where classical AI exceeds simple guessing. Our AI demonstration shows a live attempt to uncover the secret code. 
 *[Show: heatmap animation]*
+Each circle represents a possible color in a specific slot, with brightness indicating how many hypotheses support that choice. As options are ruled out, they darken.
 
-**Mastermind** is a classic code-breaking game where players guess a hidden 4-color sequence and receive Black/White peg feedback to refine their guesses. We chose this game because it is a well-defined logical puzzle, showcasing where classical AI exceeds simple guessing. Our AI demonstration shows a live attempt to uncover the secret code. Each circle represents a possible color in a specific slot, with brightness indicating how many hypotheses support that choice. As options are ruled out, they darken immediately.
-
-After each guess, the AI checks all 1,296 possible codes against one question: if this were the correct answer, would it produce the same feedback? If not, that candidate is impossible and is eliminated. The pool of potential codes shrinks with each turn because we systematically eliminate options rather than just guessing at random. This method ensures the process doesn’t continue endlessly.
+After each guess, the AI checks all 1,296 possible codes against a question: if this were the correct answer, would it produce the same feedback? If not, that candidate is impossible and is eliminated. The potential pool shrinks with each turn because we systematically eliminate options rather than just guessing. This method ensures the process terminates.
 
 
 ## [1:25–2:05] Part 2 — Rule-Based AI vs. LLMs
 
-Why solve this with rule-based logic instead of an LLM? Because Mastermind is fully constrained — every rule is precise, every outcome deterministic. A modern LLM only approximates an answer; our Constraint Satisfaction approach proves one.
-
-An LLM functions as a statistical pattern-matcher. If you request it to monitor 1,296 hypotheses over six turns, it may hallucinate — misremembering eliminated codes or confidently suggesting guesses that contradict earlier feedback — because it predicts probable text rather than following a strict algorithm. For games with strict, precise rules, rigid logic is more effective.
+Why solve this with rule-based logic instead of an LLM? Because Mastermind is fully constrained — every rule is precise, every outcome deterministic. An LLM functions as a statistical pattern-matcher. If you request it to monitor 1,296 hypotheses over six turns, it may hallucinate — misremembering eliminated codes or confidently suggesting guesses that contradict earlier feedback — because it predicts probable text rather than following a strict algorithm. For games with strict, precise rules, rigid logic is more effective.
 
 
 ## [2:05–4:10] Part 3 — The Custom Heuristic (A*)
 
 *[Show: both bar charts]*
 
-Mastermind worked because feedback let us reason logically toward the answer. Peg Solitaire is different: jump pegs over each other until only one remains, with no feedback signal telling you if a move was 'right' — the only way to know if a sequence works is to search it out directly. That makes this a pure search problem, not a deduction problem, and it needs different tools.
+Mastermind worked because feedback let us reason logically toward the answer. Peg Solitaire is different: pegs jump over each other until only one remains, with no feedback to say which move was 'right' — the only way to know if a sequence works is to seek it out. That makes this a pure search problem, not a deduction problem, and it needs different tools.
 
 Blind BFS discovered a solution with 13 jumps but required exploring 3,012 states, keeping its entire frontier and visited set in memory—totaling over 5,700 states. DFS is less resource-intensive, examining only 490 states, but it relies on a fortunate branch without any certainty.
 
