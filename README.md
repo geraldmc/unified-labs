@@ -1,6 +1,6 @@
 # unified-labs
 
-Lab notebooks for symbolic and classical AI techniques.
+Lab notebooks for AI techniques.
 
 ## Labs
 - `the_symbolic_architect/` — Unified Lab 1: rule-based inference (forward/backward chaining) and STRIPS planning for a simulated medical clinic.
