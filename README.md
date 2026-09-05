@@ -11,3 +11,7 @@ Lab notebooks for symbolic and classical AI techniques.
   - ✅ Milestone 1: The Codebreaker — Constraint Satisfaction for Mastermind
   - ✅ Milestone 2: The Peg Board — Uninformed Search (BFS/DFS) for Peg Solitaire
   - ✅ Milestone 3: The Pathfinder — Informed Search (A*) for Peg Solitaire
+- `the_genetic_algorithm/` — Unified Lab 2 (Module 2): a from-scratch Genetic Algorithm placing N defense drones on an N×N grid with no shared row, column, or diagonal.
+  - ✅ Milestone 1: The Gene Splicer — Crossover & Mutation
+  - ⬜ Milestone 2: Natural Selection — Roulette vs. Tournament Selection
+  - ⬜ Milestone 3: The GA Lifecycle
