@@ -1,0 +1,32 @@
+<html><head><style>body {
+   color: black;
+}
+</style></head><body><h1 id="ai-arcade-sprint-review-video-script-4-20-">AI Arcade — Sprint Review Video Script (~4:20)</h1>
+<p><strong>[0:00–0:15] Open (Cmd + Shift + 5)</strong></p>
+<p>I&#39;m the lead AI engineer on RetroMind Studios&#39; new project — bringing classic board games back to life with built-in AI. Today it&#39;s Mastermind and Peg Solitaire, both solved with classical AI.</p>
+<h2 id="-0-15-1-20-part-1-the-detective-alibi-mastermind-">[0:15–1:20] Part 1 — The Detective Alibi (Mastermind)</h2>
+<p><strong>Mastermind</strong> is a classic code-breaking game where players guess a 4-color sequence and receive feedback to refine their guesses. We chose this game because it&#39;s a perfectly constrained logical puzzle. Our demonstration shows a live attempt to uncover the secret code. </p>
+<p><em>[Show: heatmap animation]</em></p>
+<p>Each circle represents a possible color in a specific slot, with brightness indicating how many hypotheses support each choice. As options are ruled out, the circle color darkens.</p>
+<p>After each guess, the AI checks all possible codes and asks a question: if this were the correct answer, would it produce the same result? If not, the candidate is eliminated. The pool of hypotheses shrinks with each cycle since we're eliminating options rather than just guessing. </p>
+<h2 id="-1-20-1-55-part-2-rule-based-ai-vs-llms">[1:20–1:55] Part 2 — Rule-Based AI vs. LLMs</h2>
+<p>So why solve this with rule-based logic instead of an LLM? Mastermind is fully constrained — every rule is precise. On the other hand, an LLM is a statistical pattern-matcher. If you ask it to monitor a thousand hypotheses, it might repeat eliminated ones or suggest guesses that contradict actual feedback. For games with strict, precise rules, a rigid logic is required.</p>
+<h2 id="-1-55-4-15-part-3-the-custom-heuristic-a-">[1:55–4:15] Part 3 — The Custom Heuristic (A*)</h2>
+<p>Mastermind works because feedback lets us reason toward a correct answer. On the other hand, Peg Solitaire presents a completely different challenge: pegs jump over each other until one remains, with no feedback along the way. The only way to find a winning sequence is to search the state space. Because this is a combinatorial search problem rather than pure deduction, we evaluated classical uninformed search algorithms to see how they scale.</p>
+
+<p><em>[Show: nodes-expanded chart]</em>
+
+   As you can see in our benchmark, blind exploration comes at a price. Naive BFS (left) guarantees finding a 13-jump solution, but it expands an exhaustive 3,012 states to do so. In the center, DFS looks far cheaper at just 490 states, but it achieves this by gambling on a lucky branch with no guarantees. On the right A* is the winner with a 98% reduction in compute cost. However, raw node count only tells half the story—the real bottleneck is memory. </p>
+
+<p><em>[Show: memory/frontier chart]</em>
+
+When we break down active frontier storage versus our visited history, BFS hoards both, holding over nearly 6 thousand states in memory. DFS is remarkably lean with just 26 nodes, but its footprint is still weighed down by nearly 500 visited states.</p>
+<p>That brings us to A*. It ranks every move with a simple formula: cost, thus far, plus our best guess of what’s left to reach the goal. For my heuristic, I took the baseline count of remaining pegs and added two penalties: one for isolated pegs stranded without a neighbor to jump, and another for dispersion.
+</p>
+<p>
+There's an important caveat here: so-called textbook A* requires an admissible heuristic to guarantee the shortest path. My heuristic breaks this rule by overestimating on purpose. Ordinarily, that's a gamble, but in Peg Solitaire, every winning sequence is exactly 13 jumps away. There is no shortcut to accidentally skip! We can safely trade theoretical admissibility for speed—with zero penalty to our solution.
+
+</p>
+<h2 id="-4-15-4-30-close">[4:15–4:30] Close (Cmd + Ctrl + Esc)</h2>
+<p>Ultimately, this project shows the power of matching the algorithm to the problem. Rather than relying on heavy predictive models, we used Constraint Satisfaction for pure deduction, and A* for smart, targeted search. The result is fast, reliable, zero-overhead AI running right in the browser. Thanks so much for watching.</p>
+</body></html>
