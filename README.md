@@ -13,5 +13,6 @@ Lab notebooks for AI techniques.
   - ✅ Milestone 3: The Pathfinder — Informed Search (A*) for Peg Solitaire
 - `the_genetic_algorithm/` — Unified Lab 2 (Module 2): a from-scratch Genetic Algorithm placing N defense drones on an N×N grid with no shared row, column, or diagonal.
   - ✅ Milestone 1: The Gene Splicer — Crossover & Mutation
-  - ⬜ Milestone 2: Natural Selection — Roulette vs. Tournament Selection
-  - ⬜ Milestone 3: The GA Lifecycle
+  - ✅ Milestone 2: Natural Selection — Roulette vs. Tournament Selection
+  - ✅ Milestone 3: The GA Lifecycle
+  - ⬜ Summary Audit
