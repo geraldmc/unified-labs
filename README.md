@@ -18,10 +18,10 @@ Lab notebooks for AI techniques.
   - ✅ Milestone 3: The GA Lifecycle
   - ✅ Summary Audit
 - `the_genetic_programmer/` — Unified Lab 3: Genetic Programming — evolving syntax trees to discover hidden formulas via symbolic regression.
-  - ⬜ Milestone 1: Syntax Tree Evaluation & MSE Fitness
-  - ⬜ Milestone 2: Genetic Operators (Subtree Crossover & Point Mutation)
-  - ⬜ Milestone 3: The GP Lifecycle
-  - ⬜ Summary Audit
+  - ✅ Milestone 1: Syntax Tree Evaluation & MSE Fitness
+  - ✅ Milestone 2: Genetic Operators (Subtree Crossover & Point Mutation)
+  - ✅ Milestone 3: The GP Lifecycle
+  - ✅ Summary Audit
   - also includes **Assignment 2** (Modules 2 & 3): Fixed-Weight GA vs. NEAT, balancing CartPole via Gymnasium
     - ⬜ Milestone 1: The Fixed-Weight Genetic Algorithm
     - ⬜ Milestone 2: NeuroEvolution of Augmenting Topologies (NEAT)
