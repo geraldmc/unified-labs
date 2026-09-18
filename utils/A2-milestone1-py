@@ -1,0 +1,180 @@
+# =====================================================================
+# CELL 6 — MILESTONE 1
+# =====================================================================
+# Paste this into the "# ENTER YOUR CODE HERE" cell under Milestone 1.
+# The provided simulate_cartpole (cell 4) is left untouched.
+
+import math
+import random
+import statistics
+from typing import Optional, Sequence
+
+
+def feedforward_pass(state: Sequence[float],
+                     W1: Sequence[Sequence[float]],
+                     W2: Sequence[float]) -> int:
+    """One forward pass. Returns 1 (push right) or 0 (push left).
+
+    W1 is 4 rows x 5 columns: row i holds the weights leaving input i.
+    W2 is 5 weights, one per hidden node.
+
+    Note: the sigmoid is decorative. Thresholding 1/(1+e^-z) at 0.5 is
+    identical to thresholding z at 0, because the sigmoid is monotone
+    and sigmoid(0) = 0.5 exactly. It is implemented as specified.
+    """
+    hidden = []
+    for j in range(5):
+        total = 0.0
+        for i in range(4):
+            total += state[i] * W1[i][j]
+        hidden.append(total if total > 0.0 else 0.0)        # ReLU
+
+    out_sum = 0.0
+    for j in range(5):
+        out_sum += hidden[j] * W2[j]
+
+    out_sum = max(-500.0, min(500.0, out_sum))              # overflow guard
+    prob = 1.0 / (1.0 + math.exp(-out_sum))
+    return 1 if prob > 0.5 else 0
+
+
+def generate_chromosome(rng: Optional[random.Random] = None) -> list:
+    """25 random floats in [-1.0, 1.0]."""
+    r = rng or random
+    return [r.uniform(-1.0, 1.0) for _ in range(25)]
+
+
+def uniform_crossover(parent1: Sequence[float],
+                      parent2: Sequence[float],
+                      rng: Optional[random.Random] = None) -> list:
+    """One child. Independent coin flip per gene."""
+    r = rng or random
+    return [parent1[i] if r.random() < 0.5 else parent2[i] for i in range(25)]
+
+
+def gaussian_mutation(chromosome: list,
+                      rate: float,
+                      sigma: float = 0.5,
+                      rng: Optional[random.Random] = None) -> list:
+    """Nudge genes rather than replace them. Mutates in place and returns."""
+    r = rng or random
+    for i in range(len(chromosome)):
+        if r.random() < rate:
+            chromosome[i] += r.gauss(0, sigma)
+    return chromosome
+
+
+def run_fixed_ga(pop_size: int = 15,
+                 generations: int = 30,
+                 mutation_rate: float = 0.1,
+                 elite_fraction: float = 0.2,
+                 rng: Optional[random.Random] = None,
+                 verbose: bool = True):
+    """Evolve 25 network weights. Returns (best_chromosome, best_fitness).
+
+    Three choices the blueprint left open, made explicit:
+      elite_fraction  the blueprint says "keep a percentage" without a number
+      parent pool     top 50%, sampled uniformly with replacement, as specified
+      rng             makes the operators reproducible; the environment is not
+                      seedable through the provided simulate_cartpole
+    """
+    r = rng or random
+    population = [generate_chromosome(r) for _ in range(pop_size)]
+
+    n_elite = max(1, int(round(elite_fraction * pop_size)))
+    n_parents = max(2, pop_size // 2)
+
+    best_chromosome, best_fitness = None, -1.0
+
+    for gen in range(generations):
+        scored = sorted(((simulate_cartpole(c), c) for c in population),
+                        key=lambda pair: pair[0], reverse=True)
+
+        if scored[0][0] > best_fitness:
+            best_fitness, best_chromosome = scored[0][0], list(scored[0][1])
+
+        if verbose:
+            mean_fit = statistics.mean(s for s, _ in scored)
+            print(f"  gen {gen:2d}  best {scored[0][0]:5.1f}  mean {mean_fit:6.1f}")
+
+        if scored[0][0] >= 500.0:
+            if verbose:
+                print(f"  Perfect score reached at generation {gen}. Stopping.")
+            break
+
+        parents = [c for _, c in scored[:n_parents]]
+        next_population = [list(c) for _, c in scored[:n_elite]]   # elitism
+        while len(next_population) < pop_size:
+            p1, p2 = r.choice(parents), r.choice(parents)
+            child = uniform_crossover(p1, p2, r)
+            next_population.append(gaussian_mutation(child, mutation_rate, rng=r))
+        population = next_population
+
+    return best_chromosome, best_fitness
+
+
+# =====================================================================
+# NEW CELL — add directly after the Milestone 1 Test Harness
+# =====================================================================
+# The harness above declares success on a SINGLE episode from a random
+# initial state. Lecture 6 (Gymnasium tutorial) makes the opposite
+# argument and evaluates over 100 episodes. This cell does that, and
+# does it reproducibly.
+
+import gymnasium as gym
+
+
+def evaluate(chromosome: Sequence[float],
+             episodes: int = 200,
+             seed: int = 1000) -> list:
+    """Score one chromosome over `episodes` seeded episodes.
+
+    Fully reproducible: each episode resets with an explicit seed, so
+    the same chromosome and the same `seed` always give the same list.
+    """
+    env = gym.make('CartPole-v1')
+    W1 = [chromosome[i:i + 5] for i in range(0, 20, 5)]
+    W2 = chromosome[20:25]
+
+    scores = []
+    for k in range(episodes):
+        state, _ = env.reset(seed=seed + k)
+        total = 0.0
+        done = False
+        while not done and total < 500:
+            state, reward, terminated, truncated, _ = env.step(
+                feedforward_pass(state, W1, W2))
+            done = terminated or truncated
+            total += reward
+        scores.append(total)
+
+    env.close()
+    return scores
+
+
+def report(scores: list, label: str) -> None:
+    hits = sum(1 for s in scores if s >= 500)
+    print(f"{label}")
+    print(f"  episodes         : {len(scores)}")
+    print(f"  mean             : {statistics.mean(scores):.1f} / 500")
+    print(f"  median           : {statistics.median(scores):.1f}")
+    print(f"  range            : {min(scores):.0f} - {max(scores):.0f}")
+    print(f"  std deviation    : {statistics.pstdev(scores):.1f}")
+    print(f"  episodes at 500  : {hits}/{len(scores)} ({100 * hits / len(scores):.0f}%)")
+
+
+scores = evaluate(best_weights, episodes=200, seed=1000)
+report(scores, "Fixed-Weight GA winner, re-evaluated on fresh episodes:")
+
+import matplotlib.pyplot as plt
+
+plt.figure(figsize=(7, 3.5))
+plt.hist(scores, bins=25)
+plt.axvline(500, linestyle="--", label="score the harness reported")
+plt.axvline(statistics.mean(scores), label="true mean")
+plt.xlabel("episode score")
+plt.ylabel("episodes")
+plt.title("One number vs. the distribution it was drawn from")
+plt.legend()
+plt.tight_layout()
+plt.show()
