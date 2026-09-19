@@ -25,5 +25,5 @@ Lab notebooks for AI techniques.
   - also includes **Assignment 2** (Modules 2 & 3): Fixed-Weight GA vs. NEAT, balancing CartPole via Gymnasium
     - ✅ Milestone 1: The Fixed-Weight Genetic Algorithm
     - ✅ Milestone 2: NeuroEvolution of Augmenting Topologies (NEAT)
-    - ⬜ Milestone 3: Visualization & Topological Analysis
-    - ⬜ Sprint Review (Video Submission & Audit Summary)
+    - ✅ Milestone 3: Visualization & Topological Analysis
+    - ⬜ Sprint Review (Video Submission & Audit Summary) — script and visual map drafted, video not yet recorded
