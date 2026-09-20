@@ -1,45 +1,44 @@
 # Visual-to-Script Integration Map: Assignment 2 Sprint Review
 
-Companion to `A2-sprint-review-script.md` (~4:38 at 128 wpm). Cells are named by the banner comment on their
-first line, not by position — Colab shows execution counts, not indices, and
-any inserted cell renumbers everything below it. Find a cell with Ctrl+F on
-its banner text.
+Companion to `A2-sprint-review-script.md` (~4:45 at 128 wpm). Cells are named by
+the banner comment on their first line, not by position — Colab shows execution
+counts, not indices, and any inserted cell renumbers everything below it. Find a
+cell with Ctrl+F on its banner text.
+
+**The spine is the reproducibility finding.** Each row below should visibly
+serve it: the Open states it, the Interlude demonstrates it, Part 2 contrasts
+the architecture that never changes with the one that never repeats, Part 3
+supplies the single constant, the Close lands it.
 
 | Timestamp | Script Section | On-Screen Action / Focus | Cursor & Narration Cue | Prompt Alignment |
 | :--- | :--- | :--- | :--- | :--- |
-| **0:00 – 0:21** | **Open** | Top of the notebook: title and "The Scenario" markdown. | Cursor rests on the title. Establish the two architectures and the 200-episode standard of evidence before any result appears. | Executive framing. |
-| **0:21 – 1:13** | **Part 1 — The Mathematical Nudge** | Milestone 1 code cell (banner `# MILESTONE 1 — CODE`), scrolled to `gaussian_mutation`. | Highlight `chromosome[i] += random.gauss(0, sigma)`. Say "expected value of a mutated weight is the weight it replaced" while the cursor sits on `gauss(0, sigma)` — the zero is the whole argument. | **Prompt 1:** Continuous Evolution. |
-| **1:13 – 1:32** | **Interlude — what the harness measured** | Re-evaluation output (banner `# MILESTONE 1 — HONEST RE-EVALUATION`), then the `plot_score_distribution` histogram (banner `# MILESTONE 1 — SCORE DISTRIBUTION PLOT`). | Read "episodes at 500: 75/200 (38%)" off that output, then let the histogram's own title carry the rest — it already says the harness reported 500 from one episode. Rest on the gap where the mean sits. | Milestone 1 evidence; sets the standard of proof for Parts 2 and 3. |
-| **1:32 – 2:37** | **Part 2 — Occam's Razor** | Milestone 3 harness output: the fixed topology graph (banner `# MILESTONE 3 TEST HARNESS`), then the NEAT graph (banner `# Call your NEAT topology graph here`). | Sweep the cursor across the 25-edge web while saying "identical for every solution it will ever find." Then cut to the NEAT graph and trace the two-hop path: the dashed **disabled** edge, then cart position going through the new hidden node instead. | **Prompt 2:** Occam's Razor & hardware. |
-| **2:37 – 3:55** | **Part 3 — Protection of Innovation** | `StdOutReporter` log in the Milestone 2 harness output (banner `# MILESTONE 2 TEST HARNESS`), then section 4 of the regeneration cell (banner `# MILESTONE 2 — AUDIT NUMBER REGENERATION`). | Point at the **Species** table and the **Mean genetic distance** line as you describe the mechanism. Then scroll to `one add-node mutation ... delta = 0.91667` and hold there for the measurement. | **Prompt 3:** Speciation & compatibility distance. |
-| **3:55 – 4:04** | **Behavioural evidence** | Play `fixed_agent.mp4` (banner `# MILESTONE 3 TEST HARNESS`), then `neat_agent.mp4` (banner `--- 2. NEAT GA VISUALIZATION ---`). | Let both clips run without narrating over the physics. Deliver the "that is a run where the fixed GA worked" line *over the first clip*, not after it — the audience is watching a flawless GA balance while the close is about to say it fails most of the time. | Milestone 3 behavioural renders. |
-| **4:04 – 4:38** | **Close** | The GA-vs-NEAT dot plot (banner `# MILESTONE 2 — RUN COMPARISON PLOT`). | Trace the dashed 100% line first — "every run passed here" — then drop to the two clusters. Land on "2 of 10 and 7 of 10." | Executive delivery; ties back to Prompt 2's reliability caveat. |
+| **0:00 – 0:30** | **Open — the finding** | Top of the notebook: title and "The Scenario". | Cursor rests on the title. Do not rush this — "almost nothing here reproduces" is the sentence the rest of the talk depends on. | Framing; sets the thesis. |
+| **0:30 – 1:16** | **Part 1 — The Mathematical Nudge** | `# MILESTONE 1 — CODE`, scrolled to `gaussian_mutation`. | Highlight `chromosome[i] += random.gauss(0, sigma)`. Say "expected value is the weight it replaced" with the cursor on `gauss(0, sigma)` — the zero is the whole argument. | **Prompt 1:** Continuous Evolution. |
+| **1:16 – 1:37** | **Interlude — a sample size of one** | `# MILESTONE 1 — HONEST RE-EVALUATION`, then the histogram under `# MILESTONE 1 — SCORE DISTRIBUTION PLOT`, then the GA sweep table in `# MILESTONE 2 — AUDIT NUMBER REGENERATION`. | Say "a sample size of one" while pointing at the harness line, then sweep down the 30-row GA table to show 0% next to 100%. This is the evidence for the Open's claim. | Thesis evidence; Milestone 1 result. |
+| **1:37 – 2:48** | **Part 2 — Occam's Razor** | `# MILESTONE 3 TEST HARNESS`: let `fixed_agent.mp4` play, scroll to the fixed topology graph in the same output, then the NEAT graph under `# Call your NEAT topology graph here`. | Deliver "that clip is one of the runs where the GA works" **over** the video. Then sweep the 25-edge web on "identical every run", and cut to the NEAT graph on "never the same twice". | **Prompt 2:** Occam's Razor & hardware. |
+| **2:48 – 4:04** | **Part 3 — Protection of Innovation** | `StdOutReporter` log under `# MILESTONE 2 TEST HARNESS`, then section 4 of `# MILESTONE 2 — AUDIT NUMBER REGENERATION`. | Point at the **Species** columns and the **Mean genetic distance** line by name. Then hold on `delta = 0.91667` for "the one number in this talk that never moves". | **Prompt 3:** Speciation & compatibility distance. |
+| **4:04 – 4:45** | **Close** | The dot plot under `# MILESTONE 2 — RUN COMPARISON PLOT`. | Trace the dashed 100% line first — every run passed there — then drop to the two clusters. Land on "all sixty told the harness they were perfect". | Executive delivery; closes the thesis. |
 
 ---
 
 ### Screencast Setup Checklist
 
-* **Run the whole notebook top to bottom first.** Execution counts should be
-  monotone on camera; a stale `In [ ]` next to a result invites the question of
-  whether the number on screen came from the code above it.
-* **Renders confirmed.** The Milestone 3 harness cells ran in Colab under commit `5dbaefd`; both
-  `fixed_agent.mp4` and `neat_agent.mp4` play, each 500 steps, unseeded.
-* **The GA clip got lucky, and that needs saying out loud.** The unseeded render
-  happened to balance all 500 steps, but that winner succeeds in only 2 of 10
-  runs. A flawless GA video followed by "it works twice in ten" reads as a
-  contradiction unless you name it while the clip is playing. The alternative is
-  to re-render with a seed that crashes, which matches the argument but looks
-  like stacking the deck. Naming it is the better option.
-* **Figures verified against commit `b683aec` (execution 1-19).** Winner: 0
+* **Run the whole notebook top to bottom first.** Execution counts should read
+  1–19 on camera; a stale `In [ ]` beside a result invites the question of
+  whether the number came from the code above it.
+* **Renders confirmed.** Both `fixed_agent.mp4` and `neat_agent.mp4` play. The
+  NEAT clip no longer has a dedicated slot — show it only if you are running
+  ahead of schedule.
+* **The GA clip is a lucky run, and you must say so over it.** It balanced all
+  500 steps unseeded, but only 5 of 30 GA winners work in most episodes.
+* **Figures verified against commit `f21e364` (execution 1-19).** Winner: 0
   hidden nodes, 4 connections, all four sensors wired, 5 parameters. Sweeps at
-  n=30: fixed GA median 19% (4/30 above half), NEAT median 66% (18/30). NEAT
-  hidden-node distribution 24/5/1 across 0, 1 and 4. Drift: 0.89 wired vs 0.98
-  dropped. `0.91667` and the 2.0 threshold do not move — nothing else here is
-  stable, which is now the talk's argument rather than a caveat.
-* **No sensor was dropped this run.** All four inputs are wired, so there is no
-  hollow node. Part 2 describes the distribution across thirty runs and labels
-  the current winner as one draw, so it survives a re-roll either way.
-* **Pacing buffer.** Script runs 4:15–4:57 across 140–120 wpm. At 128 — the pace the AI
-  Arcade script was actually delivered at — it is 4:38, so do not ad-lib. The three prompts are
-  load-bearing; if you are running long, drop the second video clip and shorten
-  the interlude to the 38% figure alone. Do not cut Part 3.
+  n=30: fixed GA median 26% (5/30 above half), NEAT median 66% (21/30). NEAT
+  hidden-node distribution 23/6/1 across 0, 1 and 3. Drift 0.65 wired vs 1.11
+  dropped. `0.91667` and the 2.0 threshold do not move; nothing else does.
+* **Three figures need refreshing if you re-execute:** the hidden-node
+  distribution and the winner's counts in Part 2, and 21-of-30 / 5-of-30 in the
+  Close. The medians are quoted as ranges across three sweeps and survive.
+* **Pacing.** 4:20–5:04 across 140–120 wpm; 4:45 at the pace the AI Arcade
+  script was actually delivered. The cap is hard and all three prompts are
+  load-bearing — if you run long, shorten the Open's second half, not Part 3.
