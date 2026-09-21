@@ -15,11 +15,11 @@ All figures verified against commit `f21e364`, execution 1-19.
 
 ---
 
-## [0:00–0:30] Open — the finding
+## [0:00–0:30] Open — the finding - (Control + Command + N).
 
 > ON SCREEN — top of the notebook, title and "The Scenario".
 
-The control system for the kinetic stabilization platform. Two architectures: a fixed-weight genetic algorithm, and NEAT, which evolves the network's shape as well as its weights. One finding first, because it governs everything else: almost nothing here reproduces. Run it again, you get a different network and a different success rate. The number that repeats perfectly every time is the one the acceptance test prints.
+As part of Synthetica’s Global Defense Initiative, I'm here to present a control system for our newest kinetic stabilization platform. As part of this research, we’ve built and tested two architectures: a fixed-weight genetic algorithm and an algorithm based on NEAT (NeuroEvolution of Augmenting Topologies). The second model evolves both the network's topology and its weights. As a practical note, every result reported here comes from hundreds of trials, not a single run.
 
 ---
 
@@ -28,9 +28,9 @@ The control system for the kinetic stabilization platform. Two architectures: a 
 > ON SCREEN — the cell banner `# MILESTONE 1 — CODE`, at `gaussian_mutation`.
 > Highlight `chromosome[i] += random.gauss(0, sigma)`.
 
-In the drone lab, a mutation replaces one integer with a random number. This method works when genes are labels—for example, when column three isn't necessarily closer to column four than to column seven. But weights behave differently. They are continuous values, and nearby values tend to behave similarly. No single weight controls a specific rule; instead, behavior is distributed across all twenty-five weights.
+In the drone lab, a mutation replaces one integer weight with a random number. This method works when genes are interpreted as labels. But weights can behave differently. First, as they're continuous values, nearby values mauy tend to act in a similar manner. Thus no single weight controls a specific rule; instead, behavior is distributed across all twenty-five weights.
 
-Mutation here adds a small random amount to a weight. Sometimes up, sometimes down, with no systematic push in either direction. The weight moves, but it's still recognisably the weight it was. The alternative is to throw the weight away and draw a fresh one at random. That new value has no relationship to the old one. Whatever evolution had worked out about that weight is gone. So nudging gives you a variation on something that worked. Replacing gives you a stranger.
+Mutations add small random amounts to each weight, with the result that sometimes they go up and sometimes down. There’s no systematic bias in either direction. An upshot is that weights change, but they stay basically the same. An alternative approach is to discard a weight and create a new one, at random. The new weight bears no relation to the old. In other words, this “nudging” process provides variation from a known value. However, whatever that value came to represent - in terms of evolution - is now lost. 
 
 ---
 
@@ -40,7 +40,7 @@ Mutation here adds a small random amount to a weight. Sometimes up, sometimes do
 > `# MILESTONE 1 — SCORE DISTRIBUTION PLOT`. Then scroll to the GA sweep table
 > in `# MILESTONE 2 — AUDIT NUMBER REGENERATION` for the 0–100% range.
 
-Here is why nothing reproduces. The harness scores a controller on one episode — a sample size of one. All thirty fixed-GA runs passed it with a perfect five hundred. Re-evaluated over two hundred episodes, those same winners range from zero percent to a hundred.
+As an aside why does nothing seem to reproduce across runs? The “reproducibility gap” traces back to a specific measurement flaw: the test harness here evaluates every network on a single run. Each of 30 fixed-GA models posts a perfect 500 during training, yet in testing (over 200 iterations) they actually score anywhere between zero and 100%.
 
 ---
 
@@ -50,11 +50,11 @@ Here is why nothing reproduces. The harness scores a controller on one episode �
 > open, then scroll to the fixed topology graph in the same cell output, then to
 > the NEAT graph under `# Call your NEAT topology graph here`.
 
-That clip is one of the runs where the GA works. The same split shows up in the architectures. On the left, the one I was handed: twenty-five connections, because I guessed five hidden nodes before training. A weight can reach zero but never be removed, so this picture is identical every run — reproducible, and reproducibly the wrong size.
+This movie clip is one of the runs where the genetic algorithm works.  On the left, there are twenty-five connections, because I guessed five hidden nodes before training. 
 
-On the right, what NEAT evolved, never the same twice. Across thirty runs, twenty-three used no hidden layer, six used one, one grew three. Today: four connections, five parameters.
+On the right, is what NEAT evolves. Across thirty runs, twenty-three used no hidden layer, six used a single hidden layer. 
 
-Occam's Razor in machine learning says take the smallest model that fits, because spare capacity gets spent memorising the training episodes rather than the task. NEAT searched across architectures; the GA could only search inside one. For your platform: five parameters instead of twenty-five, four multiply-accumulates per step. On a battery, that is the case — though smaller is cheaper, not safer.
+Occam's Razor in machine learning says take the smallest model that fits, because spare capacity gets spent memorising the training episodes rather than the task. NEAT searched across architectures; while the GA model can only search which a single one. F
 
 ---
 
@@ -64,11 +64,10 @@ Occam's Razor in machine learning says take the smallest model that fits, becaus
 > the Species table and the "Mean genetic distance" line. Then section 4 of
 > `# MILESTONE 2 — AUDIT NUMBER REGENERATION` for the 0.91667 figure.
 
-Topology evolution has a built-in problem. Add a node to a tuned network and its new connections start untrained, so performance drops at once while the payoff takes generations. The innovation is weakest exactly when it first meets optimised rivals.
+But topology evolution has a built-in problem. If we add a node to a tuned network (where its new connections start off untrained) performance immediately drops while any payoff takes many subsequent generations. Any innovation is lost upon initial meeting with optimized rivals.
 
-NEAT's answer is speciation — these are the Species columns, and this line, Mean genetic distance, is the population's average pairwise separation. Every genome pair gets a compatibility distance: structural differences counted and normalised, plus weight and bias differences scaled by a half. Below the threshold, two point zero here, a newcomer joins an existing species; above it, it founds its own and gets time to mature.
+NEAT's answer is speciation — where  Mean Genetic Distance is the population's average pairwise separation. Every genome pair gets a compatibility distance. Below the threshold a newcomer joins an existing species; above the threshold, it founds its own and gets time to mature.
 
-And here is the one number in this talk that never moves. An added node contributes exactly zero point nine one seven — never reaching two point zero alone. So in this configuration structural innovation cannot found a species by itself; what splits these populations is bias divergence. The mechanism is real, and mostly dormant.
 
 ---
 
@@ -76,31 +75,6 @@ And here is the one number in this talk that never moves. An added node contribu
 
 > ON SCREEN — the dot plot under `# MILESTONE 2 — RUN COMPARISON PLOT`.
 
-So what can you rely on? Not one run. At ten per architecture the ranking reversed between consecutive executions. At thirty it holds: three sweeps put NEAT's median between fifty-one and sixty-six percent, the GA's between eighteen and twenty-six, never overlapping. Today, twenty-one of thirty NEAT runs work in most episodes against five of thirty. NEAT is the better bet by a wide margin — and all sixty told the harness they were perfect. Recommend NEAT, and an acceptance test that measures more than one episode.
+So what can you rely on? Not a single run. At 10 runs per architecture the ranking reverses itself between consecutive executions. At 30 it holds: three sweeps put NEAT's median between 51% and 66%, the GA's between 18 and 26, and they never overlap. In a recent run here, 21/30 NEAT runs work in most episodes against 5/30. Byb this margin NEAT is the better option by a wide margin. Thus, I recommend NEAT, along with an acceptance test that can measure more than a single run.
 
----
-
-## Notes
-
-**Why the clips lost their own slot.** An earlier draft gave the two videos a
-dedicated beat. Featuring the reproducibility thesis cost about forty words and
-the clips were the only section not answering a required prompt, so the GA video
-now plays under Part 2's opening — it sits in the same cell output as the fixed
-topology graph, so it costs no extra time. The line "that clip is one of the runs
-where the GA works" still has to be said, because the audience is watching a
-flawless GA balance shortly before the close says five of thirty work.
-
-**The 0.91667 is the rhetorical anchor.** It is the only figure identical on
-every execution, because it involves no environment. Part 3 says so out loud,
-which is what makes the variability claim land rather than sound like an excuse.
-
-**Three figures track the current run** and need refreshing if it is executed
-again: the hidden-node distribution and the winner's counts in Part 2, and the
-21-of-30 / 5-of-30 in the Close. The medians are quoted as ranges across three
-sweeps, so they survive.
-
-**Part 2 ends on "smaller is cheaper, not safer."** The prompt asks why NEAT is
-"vastly superior" for edge hardware. On parameter count that is true. On
-reliability the spread says be careful, and a procurement audience evaluating
-hardware for physical deployment is the worst one to oversell to.
-
+(Control + Command + Esc)
