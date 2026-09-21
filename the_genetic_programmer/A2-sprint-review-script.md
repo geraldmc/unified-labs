@@ -28,9 +28,9 @@ The control system for the kinetic stabilization platform. Two architectures: a 
 > ON SCREEN — the cell banner `# MILESTONE 1 — CODE`, at `gaussian_mutation`.
 > Highlight `chromosome[i] += random.gauss(0, sigma)`.
 
-In the drone lab, mutation replaced an integer with a fresh random one. That works when genes are labels — column three is no nearer column four than column seven. Weights are different: they sit on a continuous scale, and no single weight holds a rule.
+In the drone lab, a mutation replaces one integer with a random number. This method works when genes are labels—for example, when column three isn't necessarily closer to column four than to column seven. But weights behave differently. They are continuous values, and nearby values tend to behave similarly. No single weight controls a specific rule; instead, behavior is distributed across all twenty-five weights.
 
-So mutation here adds Gaussian noise centred on zero. A mutated weight's expected value is the weight it replaced. Replacement's expected value is zero whatever the parent was — it doesn't perturb what the network learned, it deletes it. Nudging keeps the child a variation on its parent; replacement makes it a stranger.
+Mutation here adds a small random amount to a weight. Sometimes up, sometimes down, with no systematic push in either direction. The weight moves, but it's still recognisably the weight it was. The alternative is to throw the weight away and draw a fresh one at random. That new value has no relationship to the old one. Whatever evolution had worked out about that weight is gone. So nudging gives you a variation on something that worked. Replacing gives you a stranger.
 
 ---
 
@@ -103,3 +103,4 @@ sweeps, so they survive.
 "vastly superior" for edge hardware. On parameter count that is true. On
 reliability the spread says be careful, and a procurement audience evaluating
 hardware for physical deployment is the worst one to oversell to.
+
